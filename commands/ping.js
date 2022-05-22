@@ -20,6 +20,6 @@ module.exports = {
 				})
 				await interaction.editReply({ embeds: [ embed ]})
 			})
-    await addPoints(interaction.user, 1, interaction, reason = "being cool and stuff", doFollowup = true)
+    //await addPoints(interaction.user, 1, interaction, reason = "being cool and stuff", doFollowup = true)
 	},
 };

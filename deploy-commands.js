@@ -35,7 +35,7 @@ const rest = new REST({ version: '9' })
 		console.log('Successfully reloaded application (/) commands.');
 		
 	} catch (error) {
-		console.error(error, error.rawError.errors["3"].options["0"].name);
+		console.error(error);
         console.log("sodifjsdofilsdjf")
 	}
     console.log("eslelslelsel")

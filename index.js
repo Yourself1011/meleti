@@ -1,4 +1,4 @@
-// paths and stuff for pathing for commands and stuff
+// paths and stuff for pathing for comma nonds and stuff
 const fs = require('node:fs');
 const path = require('node:path');
 

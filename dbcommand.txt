@@ -11,3 +11,9 @@ list all users + stuff:
 for (i of await db.list()){
     console.log(await db.get(i))
 }
+
+set someone's values
+
+let dtb = await db.get(person)
+dtb[key] = value
+db.set(person, dtb)

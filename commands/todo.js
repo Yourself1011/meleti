@@ -1,5 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const {db, newUser} = require("../db.js");
+const {addPoints} = require("./points.js")
+const wait = require('node:timers/promises').setTimeout;
+const calendarLink = require('calendar-link').google;
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,23 +39,66 @@ module.exports = {
   		subcommand
   			.setName('delete')
   			.setDescription('Deletes a task.')
+            .addStringOption(option => 
+              option
+                .setName("task")
+                .setDescription("the task to delete")
+                .setRequired(true)
+        )
     )
     .addSubcommand(subcommand =>
         subcommand
             .setName("complete")
             .setDescription("Completes a task.")
+            .addStringOption(option => 
+              option
+                .setName("task")
+                .setDescription("the task to delete")
+                .setRequired(true)
+        )
     )
     ,
 
 	async execute(interaction) {
+    let userID = interaction.user.id
+        
+    if (interaction.options.getSubcommand() == "delete"){
+        let user = await db.get(userID)
+        let task = interaction.options.getString("task")
 
-    
+        if (!user || user.tasks == 0) {
+            await interaction.reply({content: "You don't have any tasks to delete!"})
+        } else if (!user.tasks.find(x => x.name == task)) {
+            await interaction.reply({content: "You don't have a task with that name"})
+        } else {
+            let dtb = await db.get(userID)
+            dtb.tasks = dtb.tasks.filter(x => x.name != task)
+            db.set(userID, dtb)
+            await interaction.reply({content: `Succesfully removed the task with the name \`${task}\``})
+        }
+    }
+
+    if (interaction.options.getSubcommand() == "complete") {
+        let user = await db.get(userID)
+        let task = interaction.options.getString("task")
+
+        if (!user || user.tasks == 0) {
+            await interaction.reply({content: "You don't have any tasks to complete"})
+        } else if (!user.tasks.find(x => x.name == task)) {
+            await interaction.reply({content: "You don't have a task with that name"})
+        } else {
+            let dtb = await db.get(userID)
+            dtb.tasks = dtb.tasks.filter(x => x.name != task)
+            db.set(userID, dtb)
+            await interaction.reply({content: `Succesfully completed the task with the name \`${task}\`! :partying_face:`})
+            await addPoints(interaction.user, 10, interaction, reason = "completing a task", doFollowUp = true)
+        }
+    }
                             
     if (interaction.options.getSubcommand() == "view") {
-        let userID = interaction.user.id
         let user = await db.get(userID)
         
-        if (!user || !user.tasks) {
+        if (!user || user.tasks == 0) {
             await interaction.reply({content: "Tasks all done! Go relax! NOW!"})
         } else {
             let tasks = user.tasks
@@ -76,14 +122,12 @@ module.exports = {
 
     let date = new Date(edate + " " + time)
         
-      if (
-        date == "Invalid Date"
-      ) {
-        await interaction.reply({ content: 'Enter a valid date' })
+      if (date == "Invalid Date") {
+        await interaction.reply({ content: 'Enter a valid date please.' })
       }
         
       id = interaction.user.id
-      if (!await db.get(id)){
+      if (!await db.get(id)) {
           await newUser(id)
       }
 
@@ -101,8 +145,65 @@ module.exports = {
       );
       await db.set(id, dtb)
       await interaction.reply({ content: `<@${interaction.user.id}> has created a new task called ${name}, which should be done before <t:${Math.floor(date.getTime()/1000)}:f> (your timezone)`})
-		}
-    
- 
+
+			await interaction.followUp({ content: 'Here is a link to add this task to your Google Calendar. ' + calendarLink({
+				title: name,
+				start: date
+			})})
+
+        let difference = date.getTime() - Date.now()
+        let elapsed = 0
+
+        // console.log(difference)
+        
+        if (difference >= 24*60*60*1000){
+            // console.log(difference - 24*60*60*1000)
+            
+            await wait(difference - 24*60*60*1000)
+            elapsed += difference - 24*60*60*1000
+            await interaction.channel.send({content: `<@${id}> 24 hours until \`${name}\``})
+            // console.log("24h")
+
+            user = await db.get(id)
+            if (!user.tasks.find(x => x.name == name)) {
+                return
+            }
+        }
+        if (difference >= 6*60*60*1000){
+            // console.log(difference - 6*60*60*1000 - elapsed)
+            
+            await wait(difference - 6*60*60*1000 - elapsed)
+            elapsed += difference - 6*60*60*1000
+            await interaction.channel.send({content: `<@${id}> 6 hours until \`${name}\``})
+            // console.log("6h")
+
+                user = await db.get(id)
+            if (!user.tasks.find(x => x.name == name)) {
+                return
+            }
+        }
+        if (difference >= 60*60*1000){
+            // console.log(difference - 60*60*1000 - elapsed)
+            
+            await wait(difference - 60*60*1000 - elapsed)
+            elapsed += difference - 60*60*1000
+            await interaction.channel.send({content: `<@${id}> 1 hours until \`${name}\``})
+            // console.log("1h")
+
+                user = await db.get(id)
+            if (!user.tasks.find(x => x.name == name)) {
+                return
+            }
+        }
+        
+        await wait(difference - elapsed)
+        await interaction.channel.send({content: `<@${id}> \`${name}\` must be done NOW!`})
+            // console.log("0h")
+
+                user = await db.get(id)
+            if (!user.tasks.find(x => x.name == name)) {
+                return
+            }
+    }
   }
 }

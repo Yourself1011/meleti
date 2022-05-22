@@ -7,6 +7,7 @@ module.exports = {
         await db.set(userID, {
             id: userID,
             points: 0,
+            artifacts: [],
             tasks: []
         })
     }
