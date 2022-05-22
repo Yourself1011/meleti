@@ -37,6 +37,11 @@ module.exports = {
   			.setName('delete')
   			.setDescription('Deletes a task.')
     )
+    .addSubcommand(subcommand =>
+        subcommand
+            .setName("complete")
+            .setDescription("Completes a task.")
+    )
     ,
 
 	async execute(interaction) {
