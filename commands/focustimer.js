@@ -46,6 +46,8 @@ module.exports = {
       breakamount = 0
       studytime = 0
       intervals = 1
+
+      if (time < 30) {studytime = time}
       
       if (
         time > 30

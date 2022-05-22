@@ -16,7 +16,7 @@ module.exports = {
 		let input = interaction.options.getString("expression")
     // The input is coming from discord
 
-		interaction.reply('The answer is:', math.evaluate(input))
+		interaction.reply({ content: 'The answer is: ' + math.evaluate(input) })
 	},
   
 };
