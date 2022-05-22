@@ -15,11 +15,11 @@ module.exports = {
 				var ping = Date.now() - message.createdTimestamp;
 				const embed = new MessageEmbed({
 					title: ":ping_pong: Pong!",
-				  description: `**Message Latency**: ${ping}\n**API Latency**: ${client.ws.ping}`,
+				  description: `**Message Latency**: \`${ping}ms\`\n**API Latency**: \`${client.ws.ping}ms\``,
 					color: '#FF2233'
 				})
 				await interaction.editReply({ embeds: [ embed ]})
 			})
-    await addPoints(interaction.user, 1, interaction, "being cool and stuff", true)
+    await addPoints(interaction.user, 1, interaction, reason = "being cool and stuff", doFollowup = true)
 	},
 };

@@ -4,6 +4,8 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 require('dotenv').config()
 
+console.log('Attempting to load commands...')
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 // Place your client and guild ids here
@@ -15,6 +17,8 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	commands.push(command.data.toJSON());
 }
+
+console.log(commands)
 
 const rest = new REST({ version: '9' })
 	.setToken(process.env.BOT_TOKEN);
@@ -29,7 +33,12 @@ const rest = new REST({ version: '9' })
 		);
 
 		console.log('Successfully reloaded application (/) commands.');
+		
 	} catch (error) {
-		console.error(error);
+		console.error(error, error.rawError.errors["3"].options["0"].name);
+        console.log("sodifjsdofilsdjf")
 	}
+    console.log("eslelslelsel")
 })();
+
+console.log("ieieieieipepdoododfdpodpodfpodfpo")

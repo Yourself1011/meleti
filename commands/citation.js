@@ -24,5 +24,8 @@ module.exports = {
 						value: 'cms'
 					}
 				)
-		)
+		),
+	async execute () {
+		
+	}
 };

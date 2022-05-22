@@ -1,6 +1,8 @@
-// paths and stuff for pathing for commannds and stuff
+// paths and stuff for pathing for commands and stuff
 const fs = require('node:fs');
 const path = require('node:path');
+
+console.log('Starting bot...')
 
 // Require the necessary discord.js classes
 const { Client, Intents, Collection } = require('discord.js');
@@ -19,11 +21,13 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+console.log('Commands finished loading!')
+
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
-	console.log('GET TO WORK NERDS\n\n');
+	console.log('BOT ON GET TO WORK NERDS\n\n');
 
-	client.user.setActivity('people study.', { type: 'WATCHING' })
+	client.user.setActivity('people study', { type: 'WATCHING' })
 });
 
 client.on('interactionCreate', async interaction => {
@@ -39,5 +43,5 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-// Login to Discord with your client's token
+// Login to Discord with bot token
 client.login(process.env['BOT_TOKEN']);

@@ -1,0 +1,13 @@
+const Database = require("@replit/database")
+let db = new Database
+await db.list()
+
+clear:
+for (i of await db.list()){
+    db.delete(i)
+}
+
+list all users + stuff:
+for (i of await db.list()){
+    console.log(await db.get(i))
+}
