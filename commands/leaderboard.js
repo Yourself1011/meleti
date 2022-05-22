@@ -9,28 +9,29 @@ module.exports = {
 		.setDescription('Shows the leaderboard in the server.'),
 
   	async execute(interaction, client) {
-			const leaderboard = []
-			interaction.guild.members.list().forEach(async m => {
-				console.log(m.id, await db.get(m.id))
-				let user = await db.get(m.id)
-				if (user !== null) {
-					leaderboard.push({ 
-					id: m.id,
-					name: m.displayName,
-					points: user.points
-				})
-				}
-			})
+				return interaction.reply({ content: 'Sorry, this command does not work.'});
+				const leaderboard = []
+				const list = await db.list()
 
-			leaderboard.sort((a, b) => a.points - b.points)
+				list.forEach(async mKey => {
+					let user = await db.get(mKey)
+					if (user !== null) {
+						leaderboard.push({ 
+							id: user.id,
+							points: user.points
+						})
+					}
+		
+					leaderboard.sort((a, b) => a.points - b.points)
+					
+		      const embed = new MessageEmbed({
+						title: 'Leaderboard',
+						description: leaderboard.map(m => `**<@${m.id}>**: ${m.points} points`).join('\n') || 'No one has points!',
+						color: '#244698'
+					})
 			
-      const embed = new MessageEmbed({
-				title: 'Leaderboard',
-				description: leaderboard.map(m => `**${m.name}**: ${m.points} points`).join('\n') || 'No one has points!',
-				color: '#244698'
-			})
-	
-			interaction.reply({ embeds: [ embed ] })
-    }
-  
+					return interaction.reply({ embeds: [ embed ] })
+				})
+			}
+ 
 }
