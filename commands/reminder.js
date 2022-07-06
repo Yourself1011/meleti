@@ -52,9 +52,13 @@ module.exports = {
 				cronString = parseToCron(time)
 			}
 			catch (error) {
+        console.log('fart')
 				console.log(error.stack)
 				return interaction.reply({ content: 'You entered an invalid time! Try something like `every five minutes` or `on Saturday`' })
 			}
+      if (cronString == null) {
+				return interaction.reply({ content: 'You entered an invalid time! Try something like `every five minutes` or `on Saturday`' })
+      }
 
 			if (!reminders[interaction.user.id]) {
 				reminders[interaction.user.id] = {}

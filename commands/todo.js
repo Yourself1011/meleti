@@ -124,6 +124,7 @@ module.exports = {
         
       if (date == "Invalid Date") {
         await interaction.reply({ content: 'Enter a valid date please.' })
+        return
       }
         
       id = interaction.user.id

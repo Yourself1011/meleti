@@ -85,7 +85,7 @@ module.exports = {
       let userID = interaction.user.id
 
       msg = ''
-      console.log(user.artifacts)
+      // console.log(user.artifacts)
       
       if (interaction.options.getSubcommand() == "view") {
           console.log(user.artifacts, user.artifacts == 0)
