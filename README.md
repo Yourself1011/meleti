@@ -9,4 +9,4 @@ The all-in-one productivity discord bot, jam-packed with features (pun intented)
 ## Works Cited
 
 Images: https://www.flaticon.com/authors/special/lineal-color?author_id=1
-Discord.js: https://discord.js.org/#/
+Discord.js: https://discord.js.org/#/                                  
